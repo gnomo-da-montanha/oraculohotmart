@@ -399,6 +399,19 @@ async function validarToken(){
 
   }
 }
+window.addEventListener('DOMContentLoaded', async () => {
+
+  const valido = await validarToken();
+
+  if(valido){
+
+    document.getElementById('preLeitura').style.display = 'none';
+
+    liberarOraculo();
+
+  }
+
+});
 /* =========================
    FUNIL
 ========================= */
@@ -589,11 +602,36 @@ function revelar(div, carta, posicao){
 
   window.scrollBy({top:120, behavior:'smooth'});
 
-  if(cartasViradas === 10){
-    mostrarNovaLeitura();
-  }
+  
 }
+  if(cartasViradas === 10){
 
+  consumirToken();
+
+  mostrarNovaLeitura();
+
+}
+async function consumirToken(){
+
+  if(!token) return;
+
+  try{
+
+    await fetch(API + '/usar-token', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({ token })
+    });
+
+  }catch(e){
+
+    console.log(e);
+
+  }
+
+}
 function mostrarNovaLeitura(){
 
   if(document.getElementById('novaBtn')) return;
