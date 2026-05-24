@@ -627,13 +627,18 @@ function revelar(div, carta, posicao){
 
   
 }
-  if(cartasViradas === 10){
+  if (cartasViradas === 10) {
 
-  consumirToken();
-
-  mostrarNovaLeitura();
+  setTimeout(() => {
+    fetch(API + "/finalizar-leitura", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token })
+    });
+  }, 1500);
 
 }
+  
 async function consumirToken(){
 
   if(!token) return;
