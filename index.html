@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oráculo da Cruz Celta</title>
 <meta name="description" content="Leitura guiada da Cruz Celta com os Arcanos Maiores.">
-
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6a0dad">
 <style>
 *{
   box-sizing:border-box;
@@ -362,11 +363,45 @@ button{
 </div>
 
 <script>
+
+const API = 'https://oraculohotmart-backend.onrender.com';
+
+let token = null;
+
+let respostas = {};
+async function validarToken(){
+
+  const params = new URLSearchParams(window.location.search);
+
+  token = params.get('token');
+
+  if(!token){
+    return false;
+  }
+
+  try{
+
+    const r = await fetch(API + '/validar-token', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({ token })
+    });
+
+    const res = await r.json();
+
+    return res.valido;
+
+  }catch(e){
+
+    return false;
+
+  }
+}
 /* =========================
    FUNIL
 ========================= */
-
-let respostas = {};
 
 function selecionar(el, pergunta){
   const grupo = el.parentElement.querySelectorAll('.option');
@@ -403,14 +438,9 @@ function abrirPagamento(){
 
 function comprarHotmart(){
 
-  // 🔥 TROQUE PELO SEU LINK
-  window.open('https://SEU-LINK-HOTMART-AQUI', '_blank');
+  window.open('https://pay.hotmart.com/M105972254L');
 
-  localStorage.setItem('oraculoLiberado', '1');
-
-  liberarOraculo();
 }
-
 function liberarOraculo(){
   document.getElementById('payment').style.display = 'none';
   document.getElementById('game').style.display = 'block';
@@ -662,6 +692,10 @@ const cards = [{nome:"O Louco",img:"img/louco.jpg",luz:"Um novo ciclo parece se 
 
 {nome:"O Mundo",img:"img/mundo.jpg",luz:"Um ciclo importante caminha para conclusão, ainda que parte de você talvez esteja tentando compreender o que fazer depois dessa etapa.",sombra:"Sensação de incompletude, vazio após conquistas ou dificuldade em encerrar verdadeiramente certos processos."}
 ];
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
+}
 
 </script>
 
