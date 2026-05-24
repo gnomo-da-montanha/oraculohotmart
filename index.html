@@ -407,7 +407,30 @@ window.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('preLeitura').style.display = 'none';
 
-    liberarOraculo();
+    async function validarAntesDeAbrir(){
+
+  const token = new URLSearchParams(window.location.search).get("token");
+
+  if(!token){
+    document.body.innerHTML = "Acesso negado";
+    return;
+  }
+
+  const r = await fetch(API + "/validar-token", {
+    method: "POST",
+    headers: {"Content-Type":"application/json"},
+    body: JSON.stringify({ token })
+  });
+
+  const res = await r.json();
+
+  if(!res.valido){
+    document.body.innerHTML = "Acesso inválido ou expirado";
+    return;
+  }
+
+  liberarOraculo();
+}
 
   }
 
