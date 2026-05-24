@@ -625,20 +625,19 @@ function revelar(div, carta, posicao){
 
   window.scrollBy({top:120, behavior:'smooth'});
 
-  
-}
+  // ✔ CORREÇÃO AQUI
   if (cartasViradas === 10) {
 
-  setTimeout(() => {
-    fetch(API + "/finalizar-leitura", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token })
-    });
-  }, 1500);
+    setTimeout(() => {
+      fetch(API + "/finalizar-leitura", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token })
+      });
+    }, 1500);
 
-}
-  
+  }
+}  
 async function consumirToken(){
 
   if(!token) return;
