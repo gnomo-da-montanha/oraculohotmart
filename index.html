@@ -24,6 +24,14 @@ html,body{
   color:#ead9a0;
   text-align:center;
 }
+.hotmart-box .primary{
+  background:#6a0dad;
+}
+
+.hotmart-box .primary{
+  background:#6a0dad;
+  color:#fff !important;
+}
 
 .hero{
   padding:40px 20px 10px;
@@ -76,25 +84,6 @@ html,body{
   gap:10px;
 }
 
-.option{
-  background:#191919;
-  border:1px solid #333;
-  border-radius:10px;
-  padding:14px;
-  cursor:pointer;
-  transition:0.2s;
-}
-
-.option:hover{
-  background:#222;
-}
-
-.option.selected{
-  background:#6a0dad;
-  border-color:#6a0dad;
-  color:white;
-}
-
 button{
   border:none;
   cursor:pointer;
@@ -105,7 +94,14 @@ button{
 }
 
 .primary{
-  width:100%;
+  width:auto;
+  display:inline-block;
+  min-width:220px;
+  padding:14px 22px;
+}
+.hotmart-box{
+  text-align:center;
+}
   background:linear-gradient(45deg,#7b1fd3,#b05cff);
   color:white;
 }
@@ -118,11 +114,7 @@ button{
   background:linear-gradient(45deg,gold,#d4af37);
 }
 
-#btnContinuar:disabled{
-  opacity:0.5;
-  cursor:not-allowed;
-}
-
+#payment,
 #game,
 #duvida{
   display:none;
@@ -255,11 +247,6 @@ button{
     margin-top:-30px;
     padding:20px;
   }
-  #preLeitura,
-#mainContent {
-  display: none;
-}
-
 }
 </style>
 </head>
@@ -268,20 +255,16 @@ button{
 <div class="hero">
   <h1>🔮 Auto Leitura Guiada dos Arcanos Maiores</h1>
   <div class="sub">O tarot sem intermediários.</div>
+  
 </div>
 
 <div class="container">
 
-  <!-- PAGAMENTO -->
-
   <div id="payment">
     <div class="hotmart-box">
-
       <h2>🔮 Liberar leitura completa</h2>
 
-      <p>
-        Acesse imediatamente o Oráculo da Cruz Celta.
-      </p>
+      <p>Acesse imediatamente o Oráculo da Cruz Celta.</p>
 
       <div class="hotmart-price">R$ 19,90</div>
 
@@ -292,54 +275,46 @@ button{
       <p style="font-size:13px;opacity:0.7;margin-top:18px;">
         Pagamento processado pela Hotmart.
       </p>
+    </div>
+  </div>
+
+  <!-- 🔥 TELA DE REFLEXÃO (ENTRE PAYMENT E GAME) -->
+  <div id="reflection" style="display:none">
+    <div class="hotmart-box">
+
+      <h2>🔮 Auto Leitura Guiada dos Arcanos Maiores</h2>
+
+      <div class="sub" style="margin-bottom:20px;">
+        O tarot sem intermediários.
+      </div>
+
+      <h3>🔮 Antes da leitura...</h3>
+
+      <p>Reserve alguns instantes para silenciar a mente.</p>
+
+      <p>Pense na situação, pergunta ou área da vida que deseja compreender com mais clareza.</p>
+
+      <p>A Cruz Celta revela tendências, padrões ocultos e movimentos internos que talvez ainda não estejam visíveis.</p>
+
+      <p>Quando sentir que está pronto, inicie sua leitura.</p>
+
+      <button class="primary" onclick="liberarOraculo()">
+        Iniciar minha leitura
+      </button>
 
     </div>
   </div>
 
-  <!-- PREPARAÇÃO -->
-
-  <div id="preLeitura" class="card-box" style="display:none;">
-
-    <h2>🔮 Antes da leitura...</h2>
-
-    <p style="margin-bottom:18px;">
-      Reserve alguns instantes para silenciar a mente.
-    </p>
-
-    <p style="margin-bottom:18px;">
-      Pense na situação, pergunta ou área da vida
-      que deseja compreender com mais clareza.
-    </p>
-
-    <p style="margin-bottom:22px;">
-      A Cruz Celta revela tendências, padrões ocultos
-      e movimentos internos que talvez ainda não estejam visíveis.
-    </p>
-
-    <p style="opacity:0.8;font-size:14px;margin-bottom:28px;">
-      Quando sentir que está pronto, inicie sua leitura.
-    </p>
-
-    <button class="primary" onclick="iniciarLeitura()">
-      Iniciar Minha Leitura
-    </button>
-
-  </div>
-
-  <!-- JOGO -->
-
-  <div id="game" style="display:none;">
+  <div id="game">
     <div id="board"></div>
     <div id="output"></div>
   </div>
 
 </div>
-
 <button id="btnGuia">🔮 Guia</button>
 
 <div id="modalGuia">
   <div class="content">
-
     <h2>🔮 Estrutura da Cruz Celta</h2>
 
     <p style="font-size:14px;opacity:0.8;">
@@ -350,31 +325,94 @@ button{
 
     <br><br>
 
-    <button class="secondary" onclick="fecharGuia()">
-      Fechar
-    </button>
-
+    <button class="secondary" onclick="fecharGuia()">Fechar</button>
   </div>
 </div>
 
 <script>
+
 const API = 'https://oraculohotmart-backend.onrender.com';
 
 let token = null;
 
 let respostas = {};
+async function validarToken(){
+
+  const params = new URLSearchParams(window.location.search);
+
+  token = params.get('token');
+
+  if(!token){
+    return false;
+  }
+
+  try{
+
+    const r = await fetch(API + '/validar-token', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({ token })
+    });
+
+    const res = await r.json();
+
+    return res.valido;
+
+  }catch(e){
+
+    return false;
+
+  }
+}
+window.addEventListener('DOMContentLoaded', async () => {
+
+  const valido = await validarToken();
+
+  if(valido){
+    document.getElementById('payment').style.display = 'none';
+    document.getElementById('reflection').style.display = 'block';
+  } else {
+    document.getElementById('payment').style.display = 'block';
+  }
+
+});
+
 /* =========================
    FUNIL
 ========================= */
 
-function iniciarLeitura(){
+function selecionar(el, pergunta){
+  const grupo = el.parentElement.querySelectorAll('.option');
 
-  document.getElementById("preLeitura").style.display = "none";
+  grupo.forEach(o => o.classList.remove('selected'));
 
-  document.getElementById("game").style.display = "block";
+  el.classList.add('selected');
 
+  respostas[pergunta] = el.innerText;
 
-}/* =========================
+  if(Object.keys(respostas).length === 4){
+    document.getElementById('btnContinuar').disabled = false;
+  }
+}
+
+function decisaoFinal(){
+  document.getElementById('preLeitura').style.display = 'none';
+
+  if(respostas.q4 === 'Sim'){
+    abrirPagamento();
+  } else {
+    document.getElementById('duvida').style.display = 'block';
+  }
+}
+
+function abrirPagamento(){
+  document.getElementById('duvida').style.display = 'none';
+  document.getElementById('payment').style.display = 'block';
+}
+
+/* =========================
    HOTMART
 ========================= */
 
@@ -398,6 +436,9 @@ function abrirGuia(){
   document.getElementById('modalGuia').style.display = 'block';
 }
 
+function fecharGuia(){
+  document.getElementById('modalGuia').style.display = 'none';
+}
 
 document.getElementById('btnGuia').addEventListener('click', abrirGuia);
 
@@ -527,14 +568,13 @@ function revelar(div, carta, posicao){
   `;
 
   window.scrollBy({top:120, behavior:'smooth'});
-
+}
+  
   if(cartasViradas === 10){
 
-    consumirToken();
+  consumirToken();
 
-    mostrarNovaLeitura();
-
-  }
+  mostrarNovaLeitura();
 
 }
 async function consumirToken(){
