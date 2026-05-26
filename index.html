@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oráculo da Cruz Celta</title>
-
 <meta name="description" content="Leitura guiada da Cruz Celta com os Arcanos Maiores.">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#6a0dad">
-
 <style>
-*{box-sizing:border-box;}
+*{
+  box-sizing:border-box;
+}
 
 html,body{
   margin:0;
@@ -25,11 +25,29 @@ html,body{
   text-align:center;
 }
 
-.hero{padding:40px 20px 10px;}
-.hero h1{margin:0;font-size:42px;}
-.sub{margin-top:10px;color:#f5d27a;font-size:22px;}
+.hero{
+  padding:40px 20px 10px;
+}
 
-.container{max-width:1100px;margin:auto;padding:20px;}
+.hero h1{
+  margin:0;
+  font-size:42px;
+  font-weight:700;
+}
+
+.sub{
+  margin-top:10px;
+  color:#f5d27a;
+  font-size:22px;
+  font-weight:300;
+}
+
+.container{
+  width:100%;
+  max-width:1100px;
+  margin:auto;
+  padding:20px;
+}
 
 .card-box{
   max-width:480px;
@@ -38,10 +56,25 @@ html,body{
   border:1px solid rgba(255,215,0,0.12);
   border-radius:18px;
   padding:30px;
+  box-shadow:0 0 40px rgba(0,0,0,0.5);
 }
 
-.question{text-align:left;margin-bottom:28px;}
-.options{display:flex;flex-direction:column;gap:10px;}
+.question{
+  text-align:left;
+  margin-bottom:28px;
+}
+
+.question p{
+  margin-bottom:12px;
+  color:#ddd;
+  line-height:1.5;
+}
+
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
 
 .option{
   background:#191919;
@@ -49,9 +82,18 @@ html,body{
   border-radius:10px;
   padding:14px;
   cursor:pointer;
+  transition:0.2s;
 }
 
-.option.selected{background:#6a0dad;color:#fff;}
+.option:hover{
+  background:#222;
+}
+
+.option.selected{
+  background:#6a0dad;
+  border-color:#6a0dad;
+  color:white;
+}
 
 button{
   border:none;
@@ -59,11 +101,33 @@ button{
   border-radius:10px;
   padding:14px 22px;
   font-weight:bold;
+  transition:0.2s;
 }
 
-.primary{width:100%;background:#7b1fd3;color:white;}
+.primary{
+  width:100%;
+  background:linear-gradient(45deg,#7b1fd3,#b05cff);
+  color:white;
+}
 
-#payment,#game,#duvida{display:none;}
+.primary:hover{
+  transform:scale(1.02);
+}
+
+.secondary{
+  background:linear-gradient(45deg,gold,#d4af37);
+}
+
+#btnContinuar:disabled{
+  opacity:0.5;
+  cursor:not-allowed;
+}
+
+#payment,
+#game,
+#duvida{
+  display:none;
+}
 
 #board{
   display:grid;
@@ -80,348 +144,595 @@ button{
   border-radius:12px;
   overflow:hidden;
   cursor:pointer;
+  box-shadow:0 0 15px rgba(255,215,0,0.25);
+  background:#111;
 }
 
-.card img{width:100%;height:100%;object-fit:cover;}
+.card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+}
+
+.pos0 { grid-column: 2; grid-row: 2; z-index: 2; }
+.pos1 { grid-column: 2; grid-row: 2; transform: rotate(90deg); z-index: 5; }
+.pos2 { grid-column: 1; grid-row: 2; }
+.pos3 { grid-column: 2; grid-row: 3; }
+.pos4 { grid-column: 2; grid-row: 1; }
+.pos5 { grid-column: 3; grid-row: 2; }
+.pos6 { grid-column: 4; grid-row: 1; }
+.pos7 { grid-column: 4; grid-row: 2; }
+.pos8 { grid-column: 4; grid-row: 3; }
+.pos9 { grid-column: 4; grid-row: 4; }
 
 #output{
   max-width:760px;
   margin:20px auto 100px;
   text-align:left;
-  padding:25px;
+  line-height:1.7;
   background:rgba(255,255,255,0.03);
   border-radius:18px;
+  padding:25px;
 }
 
-.leitura{margin-bottom:20px;border-bottom:1px solid rgba(255,215,0,0.15);}
+.leitura{
+  margin-bottom:30px;
+  border-bottom:1px solid rgba(255,215,0,0.15);
+  padding-bottom:20px;
+}
+
+.leitura h3{
+  color:#f5d27a;
+}
+
+#btnGuia{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:999;
+  background:#6a0dad;
+  color:white;
+}
+
+#modalGuia{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  z-index:1000;
+}
+
+#modalGuia .content{
+  max-width:430px;
+  margin:50px auto;
+  background:#111;
+  border-radius:18px;
+  padding:20px;
+}
+
+#modalGuia img{
+  width:100%;
+  border-radius:12px;
+}
+
+.hotmart-box{
+  max-width:520px;
+  margin:50px auto;
+  background:#111;
+  padding:35px;
+  border-radius:20px;
+}
+
+.hotmart-box h2{
+  margin-top:0;
+}
+
+.hotmart-price{
+  font-size:40px;
+  color:gold;
+  margin:25px 0;
+}
+
+@media(max-width:700px){
+  .hero h1{
+    font-size:30px;
+  }
+
+  .sub{
+    font-size:18px;
+  }
+
+  #board{
+    transform:scale(0.88);
+    transform-origin:top center;
+    margin-top:-10px;
+  }
+
+  #output{
+    margin-top:-30px;
+    padding:20px;
+  }
+}
 </style>
 </head>
-
 <body>
 
 <div class="hero">
-  <h1>🔮 Auto Leitura dos Arcanos Maiores</h1>
+  <h1>🔮 Auto Leitura Guiada dos Arcanos Maiores</h1>
   <div class="sub">O tarot sem intermediários.</div>
 </div>
 
 <div class="container">
 
-<!-- PRE LEITURA -->
-<div id="preLeitura" class="card-box">
-  <h2>Antes da leitura</h2>
+  <div id="preLeitura" class="card-box">
+    <h2>Antes da leitura...</h2>
+    <p>Responda intuitivamente:</p>
 
-  <div class="question">
-    <p>Você sente ciclos repetidos?</p>
-    <div class="options">
-      <div class="option" onclick="selecionar(this,'q1')">Sim</div>
-      <div class="option" onclick="selecionar(this,'q1')">Não</div>
+    <div class="question">
+      <p>Você sente que certos ciclos continuam se repetindo em sua vida?</p>
+      <div class="options">
+        <div class="option" onclick="selecionar(this,'q1')">Sim</div>
+        <div class="option" onclick="selecionar(this,'q1')">Não</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <p>Existe alguma situação atual que você sente dificuldade em compreender?</p>
+      <div class="options">
+        <div class="option" onclick="selecionar(this,'q2')">Sim</div>
+        <div class="option" onclick="selecionar(this,'q2')">Não</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <p>Você acredita que símbolos podem revelar aspectos ocultos da mente?</p>
+      <div class="options">
+        <div class="option" onclick="selecionar(this,'q3')">Sim</div>
+        <div class="option" onclick="selecionar(this,'q3')">Não</div>
+      </div>
+    </div>
+
+    <div class="question">
+      <p>Você deseja abrir agora sua Cruz Celta completa?</p>
+      <div class="options">
+        <div class="option" onclick="selecionar(this,'q4')">Sim</div>
+        <div class="option" onclick="selecionar(this,'q4')">Não</div>
+      </div>
+    </div>
+
+    <button id="btnContinuar" class="primary" disabled onclick="decisaoFinal()">Continuar</button>
+  </div>
+
+  <div id="duvida" class="card-box">
+    <h2>Nem toda resposta chega pela lógica.</h2>
+    <p>
+      A Cruz Celta é uma das estruturas mais profundas do tarot.
+      Ela revela tendências, padrões ocultos e movimentos internos.
+    </p>
+
+    <button class="primary" onclick="abrirPagamento()">Ver minha leitura</button>
+  </div>
+
+  <div id="payment">
+    <div class="hotmart-box">
+      <h2>🔮 Liberar leitura completa</h2>
+
+      <p>
+        Acesse imediatamente o Oráculo da Cruz Celta.
+      </p>
+
+      <div class="hotmart-price">R$ 19,90</div>
+
+      <button class="primary" onclick="comprarHotmart()">
+        Liberar Minha Leitura
+      </button>
+
+      <p style="font-size:13px;opacity:0.7;margin-top:18px;">
+        Pagamento processado pela Hotmart.
+      </p>
     </div>
   </div>
 
-  <div class="question">
-    <p>Deseja continuar?</p>
-    <div class="options">
-      <div class="option" onclick="selecionar(this,'q2')">Sim</div>
-      <div class="option" onclick="selecionar(this,'q2')">Não</div>
-    </div>
+  <div id="game">
+    <div id="board"></div>
+    <div id="output"></div>
   </div>
 
-  <button id="btnContinuar" class="primary" disabled onclick="abrirPagamento()">Continuar</button>
 </div>
 
-<!-- PAGAMENTO -->
-<div id="payment">
-  <div class="card-box">
-    <h2>🔮 Liberar leitura</h2>
-    <button class="primary" onclick="liberarOraculo()">Liberar Oráculo</button>
+<button id="btnGuia">🔮 Guia</button>
+
+<div id="modalGuia">
+  <div class="content">
+    <h2>🔮 Estrutura da Cruz Celta</h2>
+
+    <p style="font-size:14px;opacity:0.8;">
+      Use o scroll do mouse para aproximar ou afastar a imagem.
+    </p>
+
+    <img src="img/cruz_celta.png">
+
+    <br><br>
+
+    <button class="secondary" onclick="fecharGuia()">Fechar</button>
   </div>
-</div>
-
-<!-- GAME -->
-<div id="game">
-  <div id="board"></div>
-  <div id="output"></div>
-</div>
-
 </div>
 
 <script>
 
-const API = "https://oraculohotmart-backend.onrender.com";
+const API = 'https://oraculohotmart-backend.onrender.com';
 
-let token = new URLSearchParams(location.search).get("token");
+let token = null;
+
 let respostas = {};
-let cartasViradas = 0;
-
-function selecionar(el, q){
-  document.querySelectorAll(`[onclick*="${q}"]`)
-    .forEach(e=>e.classList.remove("selected"));
-
-  el.classList.add("selected");
-  respostas[q] = el.innerText;
-
-  if(Object.keys(respostas).length >= 2){
-    document.getElementById("btnContinuar").disabled = false;
-  }
-}
-
-/* ================= VALIDAR ================= */
 async function validarToken(){
-  if(!token) return false;
 
-  try{
-    const r = await fetch(API+"/validar-token",{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({token})
-    });
+  const params = new URLSearchParams(window.location.search);
 
-    const j = await r.json();
-    return j.valido;
-  }catch(e){
+  token = params.get('token');
+
+  if(!token){
     return false;
   }
+
+  try{
+
+    const r = await fetch(API + '/validar-token', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({ token })
+    });
+
+    const res = await r.json();
+
+    return res.valido;
+
+  }catch(e){
+
+    return false;
+
+  }
 }
+window.addEventListener('DOMContentLoaded', async () => {
 
-/* ================= INIT ================= */
-window.addEventListener("DOMContentLoaded", async ()=>{
+  const valido = await validarToken();
 
-  const ok = await validarToken();
+  if(valido){
 
-  if(!ok){
-    document.body.innerHTML = "Acesso inválido ou expirado";
-    return;
+    document.getElementById('preLeitura').style.display = 'none';
+
+    liberarOraculo();
+
   }
 
-  document.getElementById("preLeitura").style.display="block";
 });
+/* =========================
+   FUNIL
+========================= */
 
-/* ================= FLUXO ================= */
-function abrirPagamento(){
-  document.getElementById("preLeitura").style.display="none";
-  document.getElementById("payment").style.display="block";
+function selecionar(el, pergunta){
+  const grupo = el.parentElement.querySelectorAll('.option');
+
+  grupo.forEach(o => o.classList.remove('selected'));
+
+  el.classList.add('selected');
+
+  respostas[pergunta] = el.innerText;
+
+  if(Object.keys(respostas).length === 4){
+    document.getElementById('btnContinuar').disabled = false;
+  }
 }
 
+function decisaoFinal(){
+  document.getElementById('preLeitura').style.display = 'none';
+
+  if(respostas.q4 === 'Sim'){
+    abrirPagamento();
+  } else {
+    document.getElementById('duvida').style.display = 'block';
+  }
+}
+
+function abrirPagamento(){
+  document.getElementById('duvida').style.display = 'none';
+  document.getElementById('payment').style.display = 'block';
+}
+
+/* =========================
+   HOTMART
+========================= */
+
+function comprarHotmart(){
+
+  window.open('https://pay.hotmart.com/M105972254L');
+
+}
 function liberarOraculo(){
-  document.getElementById("payment").style.display="none";
-  document.getElementById("game").style.display="block";
+  document.getElementById('payment').style.display = 'none';
+  document.getElementById('game').style.display = 'block';
+
   iniciarOraculo();
 }
 
-/* ================= ORÁCULO ================= */
+/* =========================
+   GUIA
+========================= */
 
-const posicoes = [
-"Situação","Desafio","Base","Passado","Objetivo",
-"Futuro","Você","Externo","Medos","Resultado"
-];
-
-const cards = [
-{
-nome:"O Louco",
-img:"img/louco.jpg",
-luz:"Um chamado ao desconhecido se apresenta. Existe liberdade quando você se permite caminhar sem garantias absolutas, confiando mais na experiência do que no controle. Algo novo quer nascer através do movimento.",
-sombra:"Impulsividade sem direção clara, fuga de responsabilidades ou decisões tomadas sem considerar consequências. A liberdade perde força quando vira dispersão."
-},
-
-{
-nome:"O Mago",
-img:"img/mago.jpg",
-luz:"Você já possui os recursos necessários — internos ou externos — para transformar sua realidade. O ponto central não é falta, mas foco. A ação consciente direciona o potencial.",
-sombra:"Uso distorcido de habilidades, manipulação ou dispersão de energia. O excesso de confiança no próprio controle pode gerar ilusão de domínio."
-},
-
-{
-nome:"A Sacerdotisa",
-img:"img/sacerdotisa.jpg",
-luz:"Há um conhecimento que não vem da lógica, mas da percepção silenciosa. Algo está sendo revelado no ritmo interno, não no externo. O segredo está no não-dito.",
-sombra:"Bloqueio da intuição, negação do sentir ou excesso de racionalização. O que já se sabe internamente é ignorado."
-},
-
-{
-nome:"A Imperatriz",
-img:"img/imperatriz.jpg",
-luz:"Processos de criação, expansão e nutrição estão ativos. Algo em sua vida está amadurecendo e pede cuidado, presença e continuidade, não pressa.",
-sombra:"Excesso de conforto, apego ou dificuldade em deixar algo evoluir naturalmente. O crescimento pode ser sufocado pelo excesso de controle emocional."
-},
-
-{
-nome:"O Imperador",
-img:"img/imperador.jpg",
-luz:"Estrutura, ordem e responsabilidade são fundamentais agora. A construção sólida exige limites claros e decisões firmes.",
-sombra:"Rigidez, controle excessivo ou dificuldade em lidar com mudanças. A necessidade de domínio pode engessar o fluxo natural da vida."
-},
-
-{
-nome:"O Hierofante",
-img:"img/hierofante.jpg",
-luz:"Aprendizados vêm por tradição, orientação ou experiência acumulada. Existe sabedoria em estruturas já existentes — nem tudo precisa ser reinventado.",
-sombra:"Dogmatismo, dependência de validação externa ou crenças limitantes. O conhecimento vira prisão quando não é questionado."
-},
-
-{
-nome:"Os Enamorados",
-img:"img/enamorados.jpg",
-luz:"Um ponto de escolha se apresenta entre caminhos que envolvem valores internos profundos. Não é apenas decisão externa — é alinhamento interno.",
-sombra:"Conflito interno, indecisão ou escolhas baseadas apenas em emoção momentânea. O desalinhamento gera tensão contínua."
-},
-
-{
-nome:"O Carro",
-img:"img/carro.jpg",
-luz:"Movimento e direção começam a se alinhar. Quando intenção e foco convergem, o avanço se torna possível e consistente.",
-sombra:"Descontrole emocional, pressa ou direção mal definida. Avançar sem clareza pode gerar desgaste."
-},
-
-{
-nome:"A Força",
-img:"img/forca.jpg",
-luz:"A verdadeira força está no domínio interno, não na imposição externa. Há equilíbrio entre instinto e consciência.",
-sombra:"Repressão emocional ou explosões de impulso. A força mal integrada vira conflito interno."
-},
-
-{
-nome:"O Eremita",
-img:"img/eremita.jpg",
-luz:"Um período de introspecção revela verdades que o movimento externo não permite ver. O silêncio agora é um guia.",
-sombra:"Isolamento excessivo ou dificuldade em pedir ajuda. O afastamento pode virar desconexão."
-},
-
-{
-nome:"Roda da Fortuna",
-img:"img/roda.jpg",
-luz:"Ciclos estão em movimento. Mudanças inevitáveis reorganizam caminhos que pareciam estáveis.",
-sombra:"Resistência à mudança ou sensação de instabilidade emocional diante do imprevisível."
-},
-
-{
-nome:"Justiça",
-img:"img/justica.jpg",
-luz:"Tudo tende ao equilíbrio. Decisões e consequências estão sendo alinhadas de forma objetiva e clara.",
-sombra:"Julgamentos distorcidos, desequilíbrio ou dificuldade em aceitar responsabilidade pelas próprias escolhas."
-},
-
-{
-nome:"O Enforcado",
-img:"img/enforcado.jpg",
-luz:"Uma pausa necessária muda a perspectiva. Nem toda ação imediata é avanço — às vezes é observação.",
-sombra:"Estagnação forçada ou resistência à mudança de visão. O apego impede o fluxo."
-},
-
-{
-nome:"A Morte",
-img:"img/morte.jpg",
-luz:"Encerramentos profundos permitem renascimento. Algo precisa terminar para que outro ciclo exista.",
-sombra:"Resistência ao fim de ciclos ou medo da transformação inevitável."
-},
-
-{
-nome:"Temperança",
-img:"img/temperanca.jpg",
-luz:"Equilíbrio interno sendo reconstruído. Processos de cura e integração acontecem de forma gradual.",
-sombra:"Excesso ou falta de moderação. Desequilíbrio emocional ou energético."
-},
-
-{
-nome:"O Diabo",
-img:"img/diabo.jpg",
-luz:"Padrões ocultos vêm à superfície. Ao reconhecer vínculos e desejos inconscientes, há possibilidade de libertação.",
-sombra:"Dependência, compulsão ou aprisionamento psicológico em padrões repetitivos."
-},
-
-{
-nome:"A Torre",
-img:"img/torre.jpg",
-luz:"Estruturas falsas são rompidas. O impacto pode ser intenso, mas abre espaço para verdade.",
-sombra:"Resistência ao colapso necessário ou apego a estruturas já instáveis."
-},
-
-{
-nome:"A Estrela",
-img:"img/estrela.jpg",
-luz:"Há renovação, esperança e reorganização emocional após períodos difíceis.",
-sombra:"Desconexão da esperança ou dificuldade em acreditar na reconstrução."
-},
-
-{
-nome:"A Lua",
-img:"img/lua.jpg",
-luz:"Nem tudo está claro. A percepção intuitiva precisa ser usada para navegar incertezas.",
-sombra:"Ilusão, confusão emocional ou medo do desconhecido interno."
-},
-
-{
-nome:"O Sol",
-img:"img/sol.jpg",
-luz:"Clareza, vitalidade e expansão. O que estava oculto se torna visível.",
-sombra:"Excesso de confiança ou dificuldade em enxergar limitações reais."
-},
-
-{
-nome:"O Julgamento",
-img:"img/julgamento.jpg",
-luz:"Um chamado interno exige resposta. Algo dentro de você pede alinhamento e consciência.",
-sombra:"Negação do chamado interno ou adiamento de decisões importantes."
-},
-
-{
-nome:"O Mundo",
-img:"img/mundo.jpg",
-luz:"Conclusão de ciclos e integração de experiências. Um fechamento importante se realiza.",
-sombra:"Sensação de incompletude ou dificuldade em encerrar etapas."
+function abrirGuia(){
+  document.getElementById('modalGuia').style.display = 'block';
 }
-];
 
-function shuffle(a){
-  return a.sort(()=>Math.random()-0.5);
+function fecharGuia(){
+  document.getElementById('modalGuia').style.display = 'none';
+}
+
+document.getElementById('btnGuia').addEventListener('click', abrirGuia);
+
+document.getElementById('modalGuia').addEventListener('click', fecharGuia);
+
+/* =========================
+   ZOOM GUIA
+========================= */
+
+let zoom = 1;
+let translateX = 0;
+let translateY = 0;
+let isDragging = false;
+let startX = 0;
+let startY = 0;
+
+const guiaImg = document.querySelector('#modalGuia img');
+
+if(guiaImg){
+
+  guiaImg.style.cursor = 'grab';
+  guiaImg.style.transition = 'transform 0.05s linear';
+
+  guiaImg.addEventListener('wheel', function(e){
+
+    e.preventDefault();
+
+    if(e.deltaY < 0){
+      zoom += 0.1;
+    } else {
+      zoom -= 0.1;
+    }
+
+    zoom = Math.min(Math.max(zoom,1),4);
+
+    guiaImg.style.transform = `scale(${zoom}) translate(${translateX}px, ${translateY}px)`;
+  });
+
+  guiaImg.addEventListener('mousedown', (e) => {
+
+    if(zoom <= 1) return;
+
+    isDragging = true;
+
+    startX = e.clientX - translateX;
+    startY = e.clientY - translateY;
+
+    guiaImg.style.cursor = 'grabbing';
+  });
+
+  document.addEventListener('mousemove', (e) => {
+
+    if(!isDragging) return;
+
+    translateX = e.clientX - startX;
+    translateY = e.clientY - startY;
+
+    guiaImg.style.transform = `scale(${zoom}) translate(${translateX}px, ${translateY}px)`;
+  });
+
+  document.addEventListener('mouseup', () => {
+
+    isDragging = false;
+    guiaImg.style.cursor = 'grab';
+  });
+}
+
+/* =========================
+   ORÁCULO
+========================= */
+
+let spread = [];
+let cartasViradas = 0;
+
+function shuffle(arr){
+  return arr.sort(() => Math.random() - 0.5);
 }
 
 function iniciarOraculo(){
 
   cartasViradas = 0;
 
-  const board = document.getElementById("board");
-  const output = document.getElementById("output");
+  const board = document.getElementById('board');
+  const output = document.getElementById('output');
 
-  board.innerHTML="";
-  output.innerHTML="";
+  board.innerHTML = '';
+  output.innerHTML = '';
 
-  const spread = shuffle([...cards]).slice(0,10);
+  spread = shuffle([...cards]).slice(0,10);
 
-  spread.forEach((c,i)=>{
+  for(let i=0;i<10;i++){
 
-    const div = document.createElement("div");
-    div.className="card";
-    div.innerHTML='<img src="img/verso.jpg">';
+    const div = document.createElement('div');
 
-    div.onclick=()=>revelar(div,c,posicoes[i]);
+    div.className = 'card pos' + i;
+
+    div.innerHTML = '<img src="img/verso.jpg">';
+
+    div.onclick = () => revelar(div, spread[i], posicoes[i]);
 
     board.appendChild(div);
-  });
+  }
 }
 
-function revelar(div,carta,posicao){
+function revelar(div, carta, posicao){
 
-  if(div.classList.contains("open")) return;
+  if(div.classList.contains('opened')) return;
 
-  div.classList.add("open");
+  div.classList.add('opened');
 
   cartasViradas++;
 
-  const invertida = Math.random()<0.5;
+  const invertida = Math.random() < 0.5;
 
-  div.innerHTML=`<img src="${carta.img}">`;
+  div.innerHTML = `<img src="${carta.img}" class="card-img">`;
 
   if(invertida){
-    div.firstChild.style.transform="rotate(180deg)";
+    div.querySelector('img').style.transform = 'rotate(180deg)';
   }
 
-  document.getElementById("output").innerHTML+=`
+  document.getElementById('output').innerHTML += `
     <div class="leitura">
       <h3>${posicao}</h3>
-      <p><b>${carta.nome}</b></p>
-      <p>${invertida?carta.sombra:carta.luz}</p>
+      <p><strong>${carta.nome}</strong> ${invertida ? '(invertida)' : ''}</p>
+      <p>${invertida ? carta.sombra : carta.luz}</p>
     </div>
   `;
+
+  window.scrollBy({top:120, behavior:'smooth'});
+
+  
+}
+  if(cartasViradas === 10){
+
+  consumirToken();
+
+  mostrarNovaLeitura();
+
+}
+async function consumirToken(){
+
+  if(!token) return;
+
+  try{
+
+    await fetch(API + '/usar-token', {
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({ token })
+    });
+
+  }catch(e){
+
+    console.log(e);
+
+  }
+
+}
+function mostrarNovaLeitura(){
+
+  if(document.getElementById('novaBtn')) return;
+
+  const btn = document.createElement('button');
+
+  btn.id = 'novaBtn';
+  btn.className = 'secondary';
+  btn.innerText = '🔮 Fazer Nova Leitura';
+  btn.style.marginTop = '30px';
+
+  btn.onclick = () => {
+
+    // remove liberação antiga
+    localStorage.removeItem('oraculoLiberado');
+
+    // limpa botão
+    btn.remove();
+
+    // esconde oráculo
+    document.getElementById('game').style.display = 'none';
+
+    // volta para pagamento
+    document.getElementById('payment').style.display = 'block';
+
+    // limpa saída
+    document.getElementById('board').innerHTML = '';
+    document.getElementById('output').innerHTML = '';
+  };
+
+  document.getElementById('game').appendChild(btn);
+}
+
+/* =========================
+   POSIÇÕES
+========================= */
+
+const posicoes = [
+'Situação Atual',
+'Desafio ou Obstáculo',
+'Base da Situação',
+'Passado Recente',
+'Objetivo Consciente',
+'Futuro Próximo',
+'Você na Situação',
+'Influências Externas',
+'Esperanças e Medos',
+'Resultado Final'
+];
+
+/* =========================
+   CARTAS
+========================= */
+
+const cards = [{nome:"O Louco",img:"img/louco.jpg",luz:"Um novo ciclo parece se abrir diante de você, ainda que nem todos os caminhos estejam claros. Existe um chamado para confiar mais na experiência do que no excesso de controle.",sombra:"Impulsividade, fuga emocional ou dificuldade em perceber as consequências das próprias escolhas. Nem todo salto representa liberdade."},
+
+{nome:"O Mago",img:"img/mago.jpg",luz:"Você talvez possua mais recursos e capacidade do que imagina neste momento. A carta sugere potencial de transformação quando intenção e ação começam a caminhar juntas.",sombra:"Manipulação, ilusões ou tentativa de controlar excessivamente pessoas e situações. O poder perde força quando usado sem consciência."},
+
+{nome:"A Sacerdotisa",img:"img/sacerdotisa.jpg",luz:"Há algo sendo revelado silenciosamente dentro de você. A resposta pode não surgir através da lógica imediata, mas da percepção sutil e da escuta interior.",sombra:"Bloqueios emocionais, negação da própria intuição ou dificuldade em enxergar o que já vem sendo sentido há algum tempo."},
+
+{nome:"A Imperatriz",img:"img/imperatriz.jpg",luz:"Existe potencial de crescimento e florescimento, ainda que o processo talvez exija paciência. Algo em sua vida busca espaço para amadurecer de forma mais natural.",sombra:"Excessos emocionais, apego ao conforto ou dificuldade em sair de padrões que já não estimulam verdadeiro crescimento."},
+
+{nome:"O Imperador",img:"img/imperador.jpg",luz:"A carta sugere necessidade de estrutura, firmeza e responsabilidade diante do momento atual. Em certas situações, assumir posição pode ser inevitável.",sombra:"Rigidez, necessidade exagerada de controle ou dificuldade em lidar com aquilo que escapa do planejamento."},
+
+{nome:"O Hierofante",img:"img/hierofante.jpg",luz:"Aprendizados importantes podem surgir através de orientações, experiências antigas ou pessoas que carregam conhecimento. Nem tudo precisa ser descoberto sozinho.",sombra:"Dogmas, crenças limitantes ou dependência excessiva da validação externa para tomar decisões."},
+
+{nome:"Os Enamorados",img:"img/enamorados.jpg",luz:"Existe uma busca por alinhamento entre desejo, emoção e verdade interior. Algumas escolhas talvez revelem mais sobre você do que sobre o caminho em si.",sombra:"Conflitos internos, indecisão ou medo das consequências emocionais ligadas a certas escolhas."},
+
+{nome:"O Carro",img:"img/carro.jpg",luz:"Movimento e avanço parecem possíveis, mas talvez seja necessário recuperar clareza antes de seguir acelerando. Direção importa mais do que velocidade.",sombra:"Pressa, perda de controle emocional ou sensação de estar sendo conduzido pelas circunstâncias."},
+
+{nome:"A Força",img:"img/forca.jpg",luz:"A verdadeira força talvez esteja na forma como você lida com aquilo que sente. Há coragem no autocontrole e também na vulnerabilidade consciente.",sombra:"Explosões emocionais, repressão excessiva ou desgaste causado por tentar suportar tudo sozinho."},
+
+{nome:"O Eremita",img:"img/eremita.jpg",luz:"Este pode ser um período de reflexão profunda e afastamento necessário para compreender melhor certos sentimentos ou decisões.",sombra:"Isolamento prolongado, dificuldade em pedir ajuda ou tendência a se fechar além do necessário."},
+
+{nome:"Roda da Fortuna",img:"img/roda.jpg",luz:"Mudanças começam a movimentar situações que talvez estivessem paradas há algum tempo. Nem tudo está sob controle, mas alguns ciclos precisam girar.",sombra:"Sensação de instabilidade, imprevisibilidade ou dificuldade em se adaptar às mudanças inevitáveis."},
+
+{nome:"Justiça",img:"img/justica.jpg",luz:"A carta sugere necessidade de equilíbrio e honestidade consigo mesmo. Certas consequências talvez estejam apenas refletindo escolhas anteriores.",sombra:"Desequilíbrios, julgamentos precipitados ou dificuldade em enxergar a situação de forma mais imparcial."},
+
+{nome:"O Enforcado",img:"img/enforcado.jpg",luz:"Talvez exista uma pausa necessária antes que algo volte a fluir. Nem toda demora representa atraso; algumas servem para mudar a percepção.",sombra:"Estagnação, resistência interna ou sensação de sacrifício sem compreender o propósito do momento."},
+
+{nome:"A Morte",img:"img/morte.jpg",luz:"Transformações profundas começam a acontecer, ainda que parte de você talvez resista ao encerramento de certos ciclos.",sombra:"Apego ao passado, medo da mudança ou dificuldade em aceitar que algo já não possui o mesmo sentido."},
+
+{nome:"Temperança",img:"img/temperanca.jpg",luz:"Existe um convite para reorganizar emoções, pensamentos e expectativas de forma mais equilibrada. Nem tudo precisa ser resolvido imediatamente.",sombra:"Exageros, conflitos internos ou sensação de desalinhamento entre aquilo que você sente e aquilo que demonstra."},
+
+{nome:"O Diabo",img:"img/diabo.jpg",luz:"A carta convida a enxergar padrões, desejos ou vínculos que talvez estejam exercendo mais influência do que aparentam. Reconhecer a sombra também é libertador.",sombra:"Aprisionamentos emocionais, dependências, excessos ou repetição de comportamentos difíceis de abandonar."},
+
+{nome:"A Torre",img:"img/torre.jpg",luz:"Algumas estruturas talvez precisem ruir para que algo mais verdadeiro possa surgir. Certas revelações, embora desconfortáveis, libertam.",sombra:"Choques inesperados, sensação de perda ou medo diante de mudanças que escapam ao controle."},
+
+{nome:"A Estrela",img:"img/estrela.jpg",luz:"Mesmo em meio às incertezas, ainda existe potencial de renovação e esperança. Pequenos sinais podem ajudar a recuperar a confiança no caminho.",sombra:"Desânimo, desconexão emocional ou dificuldade em acreditar que as coisas possam melhorar."},
+
+{nome:"A Lua",img:"img/lua.jpg",luz:"Nem tudo está totalmente claro neste momento. A sensibilidade aumenta, assim como a necessidade de confiar mais na percepção interior.",sombra:"Confusão emocional, ilusões, inseguranças ou medo de enxergar certas verdades mais profundamente."},
+
+{nome:"O Sol",img:"img/sol.jpg",luz:"Existe potencial de clareza, crescimento e reconhecimento, embora talvez ainda existam questões internas impedindo você de perceber plenamente essa luz.",sombra:"Excesso de confiança, necessidade constante de validação ou dificuldade em enxergar limitações reais."},
+
+{nome:"O Julgamento",img:"img/julgamento.jpg",luz:"Um chamado interno parece surgir com força neste período. Talvez seja hora de olhar para si mesmo com mais verdade e menos culpa.",sombra:"Negação, arrependimentos acumulados ou dificuldade em agir mesmo sabendo o que precisa ser transformado."},
+
+{nome:"O Mundo",img:"img/mundo.jpg",luz:"Um ciclo importante caminha para conclusão, ainda que parte de você talvez esteja tentando compreender o que fazer depois dessa etapa.",sombra:"Sensação de incompletude, vazio após conquistas ou dificuldade em encerrar verdadeiramente certos processos."}
+];
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./service-worker.js');
 }
 
 </script>
