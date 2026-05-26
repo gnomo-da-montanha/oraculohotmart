@@ -373,8 +373,11 @@ window.addEventListener('DOMContentLoaded', async () => {
   if(valido){
     document.getElementById('payment').style.display = 'none';
     document.getElementById('reflection').style.display = 'block';
+    document.getElementById('game').style.display = 'none';
   } else {
     document.getElementById('payment').style.display = 'block';
+    document.getElementById('reflection').style.display = 'none';
+    document.getElementById('game').style.display = 'none';
   }
 
 });
@@ -422,7 +425,10 @@ function comprarHotmart(){
 
 }
 function liberarOraculo(){
+
+  document.getElementById('reflection').style.display = 'none';
   document.getElementById('payment').style.display = 'none';
+
   document.getElementById('game').style.display = 'block';
 
   iniciarOraculo();
