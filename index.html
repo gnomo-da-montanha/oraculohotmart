@@ -256,6 +256,11 @@ button{
     margin-top:-30px;
     padding:20px;
   }
+  #preLeitura,
+#mainContent {
+  display: none;
+}
+
 }
 </style>
 </head>
@@ -308,9 +313,9 @@ button{
   </div>
 
   <div id="duvida" class="card-box">
-    <h2>Nem toda resposta chega pela lógica.</h2>
+    <h2>Entendo sua dúvida...</h2>
     <p>
-      A Cruz Celta é uma das estruturas mais profundas do tarot.
+      Não exite, a Cruz Celta é uma das estruturas mais profundas do tarot.
       Ela revela tendências, padrões ocultos e movimentos internos.
     </p>
 
@@ -369,49 +374,41 @@ const API = 'https://oraculohotmart-backend.onrender.com';
 let token = null;
 
 let respostas = {};
-async function validarToken(){
+async function revelar(div, carta, posicao){
 
-  const params = new URLSearchParams(window.location.search);
+  if(div.classList.contains('opened')) return;
 
-  token = params.get('token');
+  div.classList.add('opened');
 
-  if(!token){
-    return false;
+  cartasViradas++;
+
+  const invertida = Math.random() < 0.5;
+
+  div.innerHTML = `<img src="${carta.img}" class="card-img">`;
+
+  if(invertida){
+    div.querySelector('img').style.transform = 'rotate(180deg)';
   }
 
-  try{
+  document.getElementById('output').innerHTML += `
+    <div class="leitura">
+      <h3>${posicao}</h3>
+      <p><strong>${carta.nome}</strong> ${invertida ? '(invertida)' : ''}</p>
+      <p>${invertida ? carta.sombra : carta.luz}</p>
+    </div>
+  `;
 
-    const r = await fetch(API + '/validar-token', {
-      method:'POST',
-      headers:{
-        'Content-Type':'application/json'
-      },
-      body: JSON.stringify({ token })
-    });
+  window.scrollBy({top:120, behavior:'smooth'});
 
-    const res = await r.json();
+  if(cartasViradas === 10){
 
-    return res.valido;
+    await consumirToken();
 
-  }catch(e){
-
-    return false;
+    mostrarNovaLeitura();
 
   }
+
 }
-window.addEventListener('DOMContentLoaded', async () => {
-
-  const valido = await validarToken();
-
-  if(valido){
-
-    document.getElementById('preLeitura').style.display = 'none';
-
-    liberarOraculo();
-
-  }
-
-});
 /* =========================
    FUNIL
 ========================= */
@@ -601,9 +598,8 @@ function revelar(div, carta, posicao){
   `;
 
   window.scrollBy({top:120, behavior:'smooth'});
-
-  
 }
+  
   if(cartasViradas === 10){
 
   consumirToken();
