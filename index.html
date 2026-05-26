@@ -123,7 +123,6 @@ button{
   cursor:not-allowed;
 }
 
-#payment,
 #game,
 #duvida{
   display:none;
@@ -273,57 +272,11 @@ button{
 
 <div class="container">
 
-  <div id="preLeitura" class="card-box">
-    <h2>Antes da leitura...</h2>
-    <p>Responda intuitivamente:</p>
-
-    <div class="question">
-      <p>Você sente que certos ciclos continuam se repetindo em sua vida?</p>
-      <div class="options">
-        <div class="option" onclick="selecionar(this,'q1')">Sim</div>
-        <div class="option" onclick="selecionar(this,'q1')">Não</div>
-      </div>
-    </div>
-
-    <div class="question">
-      <p>Existe alguma situação atual que você sente dificuldade em compreender?</p>
-      <div class="options">
-        <div class="option" onclick="selecionar(this,'q2')">Sim</div>
-        <div class="option" onclick="selecionar(this,'q2')">Não</div>
-      </div>
-    </div>
-
-    <div class="question">
-      <p>Você acredita que símbolos podem revelar aspectos ocultos da mente?</p>
-      <div class="options">
-        <div class="option" onclick="selecionar(this,'q3')">Sim</div>
-        <div class="option" onclick="selecionar(this,'q3')">Não</div>
-      </div>
-    </div>
-
-    <div class="question">
-      <p>Você deseja abrir agora sua Cruz Celta completa?</p>
-      <div class="options">
-        <div class="option" onclick="selecionar(this,'q4')">Sim</div>
-        <div class="option" onclick="selecionar(this,'q4')">Não</div>
-      </div>
-    </div>
-
-    <button id="btnContinuar" class="primary" disabled onclick="decisaoFinal()">Continuar</button>
-  </div>
-
-  <div id="duvida" class="card-box">
-    <h2>Entendo sua dúvida...</h2>
-    <p>
-      Não exite, a Cruz Celta é uma das estruturas mais profundas do tarot.
-      Ela revela tendências, padrões ocultos e movimentos internos.
-    </p>
-
-    <button class="primary" onclick="abrirPagamento()">Ver minha leitura</button>
-  </div>
+  <!-- PAGAMENTO -->
 
   <div id="payment">
     <div class="hotmart-box">
+
       <h2>🔮 Liberar leitura completa</h2>
 
       <p>
@@ -339,10 +292,43 @@ button{
       <p style="font-size:13px;opacity:0.7;margin-top:18px;">
         Pagamento processado pela Hotmart.
       </p>
+
     </div>
   </div>
 
-  <div id="game">
+  <!-- PREPARAÇÃO -->
+
+  <div id="preLeitura" class="card-box" style="display:none;">
+
+    <h2>🔮 Antes da leitura...</h2>
+
+    <p style="margin-bottom:18px;">
+      Reserve alguns instantes para silenciar a mente.
+    </p>
+
+    <p style="margin-bottom:18px;">
+      Pense na situação, pergunta ou área da vida
+      que deseja compreender com mais clareza.
+    </p>
+
+    <p style="margin-bottom:22px;">
+      A Cruz Celta revela tendências, padrões ocultos
+      e movimentos internos que talvez ainda não estejam visíveis.
+    </p>
+
+    <p style="opacity:0.8;font-size:14px;margin-bottom:28px;">
+      Quando sentir que está pronto, inicie sua leitura.
+    </p>
+
+    <button class="primary" onclick="iniciarLeitura()">
+      Iniciar Minha Leitura
+    </button>
+
+  </div>
+
+  <!-- JOGO -->
+
+  <div id="game" style="display:none;">
     <div id="board"></div>
     <div id="output"></div>
   </div>
@@ -353,6 +339,7 @@ button{
 
 <div id="modalGuia">
   <div class="content">
+
     <h2>🔮 Estrutura da Cruz Celta</h2>
 
     <p style="font-size:14px;opacity:0.8;">
@@ -363,86 +350,31 @@ button{
 
     <br><br>
 
-    <button class="secondary" onclick="fecharGuia()">Fechar</button>
+    <button class="secondary" onclick="fecharGuia()">
+      Fechar
+    </button>
+
   </div>
 </div>
 
 <script>
-
 const API = 'https://oraculohotmart-backend.onrender.com';
 
 let token = null;
 
 let respostas = {};
-async function revelar(div, carta, posicao){
-
-  if(div.classList.contains('opened')) return;
-
-  div.classList.add('opened');
-
-  cartasViradas++;
-
-  const invertida = Math.random() < 0.5;
-
-  div.innerHTML = `<img src="${carta.img}" class="card-img">`;
-
-  if(invertida){
-    div.querySelector('img').style.transform = 'rotate(180deg)';
-  }
-
-  document.getElementById('output').innerHTML += `
-    <div class="leitura">
-      <h3>${posicao}</h3>
-      <p><strong>${carta.nome}</strong> ${invertida ? '(invertida)' : ''}</p>
-      <p>${invertida ? carta.sombra : carta.luz}</p>
-    </div>
-  `;
-
-  window.scrollBy({top:120, behavior:'smooth'});
-
-  if(cartasViradas === 10){
-
-    await consumirToken();
-
-    mostrarNovaLeitura();
-
-  }
-
-}
 /* =========================
    FUNIL
 ========================= */
 
-function selecionar(el, pergunta){
-  const grupo = el.parentElement.querySelectorAll('.option');
+function iniciarLeitura(){
 
-  grupo.forEach(o => o.classList.remove('selected'));
+  document.getElementById("preLeitura").style.display = "none";
 
-  el.classList.add('selected');
+  document.getElementById("game").style.display = "block";
 
-  respostas[pergunta] = el.innerText;
 
-  if(Object.keys(respostas).length === 4){
-    document.getElementById('btnContinuar').disabled = false;
-  }
-}
-
-function decisaoFinal(){
-  document.getElementById('preLeitura').style.display = 'none';
-
-  if(respostas.q4 === 'Sim'){
-    abrirPagamento();
-  } else {
-    document.getElementById('duvida').style.display = 'block';
-  }
-}
-
-function abrirPagamento(){
-  document.getElementById('duvida').style.display = 'none';
-  document.getElementById('payment').style.display = 'block';
-}
-
-/* =========================
+}/* =========================
    HOTMART
 ========================= */
 
@@ -466,9 +398,6 @@ function abrirGuia(){
   document.getElementById('modalGuia').style.display = 'block';
 }
 
-function fecharGuia(){
-  document.getElementById('modalGuia').style.display = 'none';
-}
 
 document.getElementById('btnGuia').addEventListener('click', abrirGuia);
 
@@ -598,13 +527,14 @@ function revelar(div, carta, posicao){
   `;
 
   window.scrollBy({top:120, behavior:'smooth'});
-}
-  
+
   if(cartasViradas === 10){
 
-  consumirToken();
+    consumirToken();
 
-  mostrarNovaLeitura();
+    mostrarNovaLeitura();
+
+  }
 
 }
 async function consumirToken(){
