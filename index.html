@@ -574,13 +574,14 @@ function revelar(div, carta, posicao){
   `;
 
   window.scrollBy({top:120, behavior:'smooth'});
-}
-  
+
   if(cartasViradas === 10){
 
-  consumirToken();
+    consumirToken();
 
-  mostrarNovaLeitura();
+    mostrarNovaLeitura();
+
+  }
 
 }
 async function consumirToken(){
@@ -589,7 +590,7 @@ async function consumirToken(){
 
   try{
 
-    await fetch(API + '/usar-token', {
+    await fetch(API + '/finalizar-leitura', {
       method:'POST',
       headers:{
         'Content-Type':'application/json'
