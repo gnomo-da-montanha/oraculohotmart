@@ -98,12 +98,11 @@ button{
   display:inline-block;
   min-width:220px;
   padding:14px 22px;
+  background:linear-gradient(45deg,#7b1fd3,#b05cff);
+  color:white;
 }
 .hotmart-box{
   text-align:center;
-}
-  background:linear-gradient(45deg,#7b1fd3,#b05cff);
-  color:white;
 }
 
 .primary:hover{
@@ -449,6 +448,10 @@ function fecharGuia(){
 document.getElementById('btnGuia').addEventListener('click', abrirGuia);
 
 document.getElementById('modalGuia').addEventListener('click', fecharGuia);
+
+document.querySelector('#modalGuia .content').addEventListener('click', (e) => {
+  e.stopPropagation();
+});
 
 /* =========================
    ZOOM GUIA
